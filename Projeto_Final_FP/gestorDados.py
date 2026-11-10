@@ -1,5 +1,5 @@
-
 import csv
+import os
 
 from aluno import Aluno
 from atividade import Atividade
@@ -8,17 +8,19 @@ from resultado import Resultado
 
 class GestorDados:
 
-    def carregar_datasets(self):
+    def __init__(self):
+        diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+        self.pasta_datasets = os.path.join(diretorio_atual, "Datasets")
 
-        # Verificar se os tres ficheiros existem
+    def carregar_datasets(self):
         try:
-            ficheiro_alunos = open("alunos.csv", "r", encoding="utf-8")
+            ficheiro_alunos = open(os.path.join(self.pasta_datasets, "alunos.csv"), "r", encoding="latin-1")
             ficheiro_alunos.close()
 
-            ficheiro_atividades = open("atividades.csv", "r", encoding="utf-8")
+            ficheiro_atividades = open(os.path.join(self.pasta_datasets, "atividades.csv"), "r", encoding="latin-1")
             ficheiro_atividades.close()
 
-            ficheiro_resultados = open("resultados.csv", "r", encoding="utf-8")
+            ficheiro_resultados = open(os.path.join(self.pasta_datasets, "resultados.csv"), "r", encoding="latin-1")
             ficheiro_resultados.close()
 
         except OSError:
@@ -42,18 +44,16 @@ class GestorDados:
     # --------------------------------
 
     def carregar_alunos(self):
-
         lista_alunos = []
         codigos = []
         rejeitados = 0
 
-        with open("alunos.csv", "r", encoding="utf-8") as ficheiro:
-
+        caminho = os.path.join(self.pasta_datasets, "alunos.csv")
+        with open(caminho, "r", encoding="latin-1") as ficheiro:
             leitor = csv.reader(ficheiro, delimiter=";")
             next(leitor, None)
 
             for linha in leitor:
-
                 try:
                     if len(linha) != 3:
                         raise ValueError()
@@ -69,7 +69,6 @@ class GestorDados:
                         raise ValueError()
 
                     aluno = Aluno(codigo, nome, turma)
-
                     lista_alunos.append(aluno)
                     codigos.append(codigo)
 
@@ -88,20 +87,17 @@ class GestorDados:
     # --------------------------------
 
     def carregar_atividades(self):
-
         lista_atividades = []
         codigos = []
         rejeitados = 0
-
         tipos_validos = ["quiz", "exercicio", "video", "leitura"]
 
-        with open("atividades.csv", "r", encoding="utf-8") as ficheiro:
-
+        caminho = os.path.join(self.pasta_datasets, "atividades.csv")
+        with open(caminho, "r", encoding="latin-1") as ficheiro:
             leitor = csv.reader(ficheiro, delimiter=";")
             next(leitor, None)
 
             for linha in leitor:
-
                 try:
                     if len(linha) != 5:
                         raise ValueError()
@@ -124,10 +120,7 @@ class GestorDados:
                     if codigo in codigos:
                         raise ValueError()
 
-                    atividade = Atividade(
-                        codigo, titulo, tema, tipo, duracao
-                    )
-
+                    atividade = Atividade(codigo, titulo, tema, tipo, duracao)
                     lista_atividades.append(atividade)
                     codigos.append(codigo)
 
@@ -146,32 +139,19 @@ class GestorDados:
     # --------------------------------
 
     def carregar_resultados(self, lista_alunos, lista_atividades):
-
         lista_resultados = []
         pares = []
         rejeitados = 0
 
-        # Obter os codigos dos alunos
-        codigos_alunos = []
+        codigos_alunos = [aluno.get_codigo_aluno() for aluno in lista_alunos]
+        codigos_atividades = [atividade.get_codigo_atividade() for atividade in lista_atividades]
 
-        for aluno in lista_alunos:
-            codigos_alunos.append(aluno.get_codigo_aluno())
-
-        # Obter os codigos das atividades
-        codigos_atividades = []
-
-        for atividade in lista_atividades:
-            codigos_atividades.append(
-                atividade.get_codigo_atividade()
-            )
-
-        with open("resultados.csv", "r", encoding="utf-8") as ficheiro:
-
+        caminho = os.path.join(self.pasta_datasets, "resultados.csv")
+        with open(caminho, "r", encoding="latin-1") as ficheiro:
             leitor = csv.reader(ficheiro, delimiter=";")
             next(leitor, None)
 
             for linha in leitor:
-
                 try:
                     if len(linha) != 5:
                         raise ValueError()
@@ -182,48 +162,27 @@ class GestorDados:
                     classificacao_texto = linha[3].strip()
                     tempo = float(linha[4].strip())
 
-                    # Verificar se os codigos existem
-                    if codigo_aluno not in codigos_alunos:
+                    if codigo_aluno not in codigos_alunos or codigo_atividade not in codigos_atividades:
                         raise ValueError()
 
-                    if codigo_atividade not in codigos_atividades:
-                        raise ValueError()
-
-                    # Verificar o estado
                     if estado not in ["em_curso", "concluida"]:
                         raise ValueError()
 
-                    # Verificar o tempo
                     if tempo < 0:
                         raise ValueError()
 
-                    # Verificar a classificacao
                     if classificacao_texto == "":
                         classificacao = None
-
                     else:
                         classificacao = float(classificacao_texto)
-
-                        if classificacao < 0 or classificacao > 100:
+                        if classificacao < 0 or classificacao > 100 or estado != "concluida":
                             raise ValueError()
 
-                        if estado != "concluida":
-                            raise ValueError()
-
-                    # Verificar se o resultado ja existe
                     par = (codigo_aluno, codigo_atividade)
-
                     if par in pares:
                         raise ValueError()
 
-                    resultado = Resultado(
-                        codigo_aluno,
-                        codigo_atividade,
-                        estado,
-                        classificacao,
-                        tempo
-                    )
-
+                    resultado = Resultado(codigo_aluno, codigo_atividade, estado, classificacao, tempo)
                     lista_resultados.append(resultado)
                     pares.append(par)
 

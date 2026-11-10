@@ -1,0 +1,11 @@
+codigo_atividade;titulo;tema;tipo;duracao_prevista_min
+A01;Quiz inicial;Literacia digital;quiz;20
+A02;Exercicio pratico;Literacia digital;exercicio;30
+A03;Quiz final;Literacia digital;quiz;20
+A04;Video 1;Segurança digital;video;15
+A05;Leitura 1;Segurança digital;leitura;10
+A06;Video 2;Colaboracao digital;video;15
+A07;Leitura 2;Colaboracao digital;leitura;10
+A08;Video 3;Recursos educativos;video;15
+A09;Exercicio adicional;Recursos educativos;exercicio;30
+A10;Leitura adicional;Recursos educativos;leitura;10

@@ -39,6 +39,4 @@ class Atividade:
 
     # Representação da atividade
     def __str__(self):
-        return (f"{self.codigo_atividade} - {self.titulo} - "
-                f"{self.tema} - {self.tipo} - "
-                f"{self.duracao_prevista_min} minutos")
+        return f"Código: {self.codigo_atividade}, Título: {self.titulo}, Tema: {self.tema}, Tipo: {self.tipo}, Duração Prevista (min): {self.duracao_prevista_min}"

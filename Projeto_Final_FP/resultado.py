@@ -38,9 +38,5 @@ class Resultado:
 
     # Representação do resultado
     def __str__(self):
-
-        return (f"Aluno: {self.codigo_aluno} - "
-                f"Atividade: {self.codigo_atividade} - "
-                f"Estado: {self.estado} - "
-                f"Classificação: {self.classificacao} - "
-                f"Tempo: {self.tempo_gasto_min} minutos")
+        nota_str = str(self.classificacao) if self.classificacao is not None else "-"
+        return f"Aluno: {self.codigo_aluno} | Atividade: {self.codigo_atividade} | Estado: {self.estado} | Nota: {nota_str} | Tempo: {self.tempo_gasto_min} minutos"

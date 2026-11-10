@@ -62,7 +62,4 @@ class Meta:
 
     # Representação da meta
     def __str__(self):
-
-        return (f"{self.codigo_meta} - {self.nome} - "
-                f"{self.indicador} - "
-                f"{self.relacao} {self.valor_objetivo}")
+        return f"Código: {self.codigo_meta}, Nome: {self.nome}, Indicador: {self.indicador}, Valor Objetivo: {self.valor_objetivo}, Relação: {self.relacao}"
