@@ -1,1 +1,1 @@
-# Para testar o menu, favor dar run no MENU.py
+# Para testar o menu, favor dar run no main.py
