@@ -1,1 +1,1 @@
-# Para testar o menu, favor dar run no main.py!
+# Trabalho de Programação - Fábio, Miguel, Yan.
